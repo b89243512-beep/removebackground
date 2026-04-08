@@ -57,7 +57,9 @@ export const metadata: Metadata = {
     icon: "/logo.svg",
     apple: "/logo.svg",
   },
-  verification: {},
+  verification: {
+    google: "xGJEObxCTl0CCVsHK5k5q5341MKHXTP1aJGMWzRG3Hg",
+  },
   other: {
     "mobile-web-app-capable": "yes",
   },
