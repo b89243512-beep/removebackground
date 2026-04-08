@@ -15,7 +15,7 @@ export default function PrivacyPage() {
         <h1 className="text-3xl font-bold text-foreground mb-8">Privacy Policy</h1>
         <div className="prose prose-sm max-w-none text-muted leading-relaxed space-y-6">
           <p><strong>Effective Date:</strong> April 2026</p>
-          <p>At Free Remove Background, your privacy matters to us. This Privacy Policy explains what information we collect, how we use it, and how we protect your data when you use our service at removebackground.com.</p>
+          <p>At Free Remove Background, your privacy matters to us. This Privacy Policy explains what information we collect, how we use it, and how we protect your data when you use our service at backroundremove.com.</p>
 
           <h2 className="text-xl font-semibold text-foreground mt-8">1. Information We Collect</h2>
           <p>Free Remove Background is designed with privacy in mind. We do not require account registration. When you use our service, we may collect:</p>
@@ -45,7 +45,7 @@ export default function PrivacyPage() {
 
           <h2 className="text-xl font-semibold text-foreground mt-8">8. Contact Us</h2>
           <p>Questions about this Privacy Policy? Contact us at{" "}
-            <a href="mailto:privacy@removebackground.com" className="text-primary hover:underline">privacy@removebackground.com</a>.
+            <a href="mailto:privacy@backroundremove.com" className="text-primary hover:underline">privacy@backroundremove.com</a>.
           </p>
         </div>
       </main>

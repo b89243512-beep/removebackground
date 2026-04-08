@@ -9,7 +9,7 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://removebackground.com"),
+  metadataBase: new URL("https://backroundremove.com"),
   title: {
     default: "Free Remove Background - Remove Image Background Instantly with AI",
     template: "%s | Free Remove Background",
@@ -37,7 +37,7 @@ export const metadata: Metadata = {
     description:
       "Upload any photo and remove its background in seconds. AI-powered, 100% free, no sign-up required.",
     type: "website",
-    url: "https://removebackground.com",
+    url: "https://backroundremove.com",
     siteName: "Free Remove Background",
   },
   twitter: {
@@ -51,7 +51,7 @@ export const metadata: Metadata = {
     follow: true,
   },
   alternates: {
-    canonical: "https://removebackground.com",
+    canonical: "https://backroundremove.com",
   },
   icons: {
     icon: "/logo.svg",
@@ -83,7 +83,7 @@ export default function RootLayout({
               operatingSystem: "Web",
               description:
                 "Free AI-powered tool that removes image backgrounds automatically in seconds. Get transparent PNG files instantly.",
-              url: "https://removebackground.com",
+              url: "https://backroundremove.com",
               offers: {
                 "@type": "Offer",
                 price: "0",

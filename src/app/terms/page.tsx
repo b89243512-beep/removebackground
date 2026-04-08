@@ -15,7 +15,7 @@ export default function TermsPage() {
         <h1 className="text-3xl font-bold text-foreground mb-8">Terms of Service</h1>
         <div className="prose prose-sm max-w-none text-muted leading-relaxed space-y-6">
           <p><strong>Effective Date:</strong> April 2026</p>
-          <p>Welcome to Free Remove Background. By using our website at removebackground.com, you agree to these Terms of Service.</p>
+          <p>Welcome to Free Remove Background. By using our website at backroundremove.com, you agree to these Terms of Service.</p>
 
           <h2 className="text-xl font-semibold text-foreground mt-8">1. Description of Service</h2>
           <p>Free Remove Background is a web-based tool that uses AI to remove backgrounds from images. The service is provided free of charge and does not require account registration.</p>
@@ -40,7 +40,7 @@ export default function TermsPage() {
 
           <h2 className="text-xl font-semibold text-foreground mt-8">8. Contact</h2>
           <p>Questions? Contact us at{" "}
-            <a href="mailto:legal@removebackground.com" className="text-primary hover:underline">legal@removebackground.com</a>.
+            <a href="mailto:legal@backroundremove.com" className="text-primary hover:underline">legal@backroundremove.com</a>.
           </p>
         </div>
       </main>
