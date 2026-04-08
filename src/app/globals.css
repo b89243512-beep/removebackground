@@ -1,0 +1,142 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+
+@theme inline {
+  --color-background: #ffffff;
+  --color-foreground: #0f172a;
+  --font-sans: "Inter", ui-sans-serif, system-ui, -apple-system, sans-serif;
+  --color-primary: #0ea5e9;
+  --color-primary-light: #38bdf8;
+  --color-primary-dark: #0284c7;
+  --color-secondary: #8b5cf6;
+  --color-accent: #f43f5e;
+  --color-surface: #f8fafc;
+  --color-surface-alt: #f1f5f9;
+  --color-border: #e2e8f0;
+  --color-muted: #64748b;
+  --color-success: #10b981;
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground font-sans;
+    font-family: "Inter", ui-sans-serif, system-ui, -apple-system, sans-serif;
+  }
+  html {
+    @apply scroll-smooth;
+  }
+}
+
+/* Gradient backgrounds */
+.gradient-hero {
+  background: linear-gradient(135deg, #0ea5e9 0%, #8b5cf6 50%, #f43f5e 100%);
+}
+
+.gradient-hero-subtle {
+  background: linear-gradient(180deg, #f0f9ff 0%, #ffffff 100%);
+}
+
+.gradient-text {
+  background: linear-gradient(135deg, #0ea5e9, #8b5cf6);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Card styles */
+.feature-card {
+  @apply bg-white rounded-2xl p-6 border border-border transition-all duration-300;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+}
+
+.feature-card:hover {
+  @apply border-primary/30;
+  box-shadow: 0 8px 30px rgba(14, 165, 233, 0.08);
+  transform: translateY(-2px);
+}
+
+/* Upload area */
+.upload-area {
+  @apply border-2 border-dashed border-primary/30 rounded-2xl p-8 text-center transition-all duration-300 cursor-pointer;
+  background: rgba(14, 165, 233, 0.02);
+}
+
+.upload-area:hover {
+  @apply border-primary/60;
+  background: rgba(14, 165, 233, 0.05);
+}
+
+/* Step number */
+.step-number {
+  @apply w-12 h-12 rounded-full flex items-center justify-center text-lg font-bold text-white;
+  background: linear-gradient(135deg, #0ea5e9, #8b5cf6);
+}
+
+/* Use case badge */
+.usecase-badge {
+  @apply inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-white border border-border text-sm font-medium text-foreground transition-all duration-200;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
+}
+
+.usecase-badge:hover {
+  @apply border-primary/30 text-primary;
+  box-shadow: 0 4px 12px rgba(14, 165, 233, 0.08);
+}
+
+/* FAQ */
+.faq-item {
+  @apply border border-border rounded-xl overflow-hidden transition-all duration-200;
+}
+
+.faq-item:hover {
+  @apply border-primary/20;
+}
+
+/* Button styles */
+.btn-primary {
+  @apply inline-flex items-center justify-center px-6 py-3 rounded-xl font-semibold text-white transition-all duration-200;
+  background: linear-gradient(135deg, #0ea5e9, #8b5cf6);
+  box-shadow: 0 4px 14px rgba(14, 165, 233, 0.3);
+}
+
+.btn-primary:hover {
+  box-shadow: 0 6px 20px rgba(14, 165, 233, 0.4);
+  transform: translateY(-1px);
+}
+
+.btn-secondary {
+  @apply inline-flex items-center justify-center px-6 py-3 rounded-xl font-semibold text-primary bg-primary/5 border border-primary/20 transition-all duration-200;
+}
+
+.btn-secondary:hover {
+  @apply bg-primary/10;
+}
+
+/* Checkerboard pattern for transparent bg preview */
+.checkerboard {
+  background-image:
+    linear-gradient(45deg, #e2e8f0 25%, transparent 25%),
+    linear-gradient(-45deg, #e2e8f0 25%, transparent 25%),
+    linear-gradient(45deg, transparent 75%, #e2e8f0 75%),
+    linear-gradient(-45deg, transparent 75%, #e2e8f0 75%);
+  background-size: 16px 16px;
+  background-position: 0 0, 0 8px, 8px -8px, -8px 0px;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  background: #f1f5f9;
+}
+::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}
