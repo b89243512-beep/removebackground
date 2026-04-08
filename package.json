@@ -12,7 +12,7 @@
     "nextjs"
   ],
   "engines": {
-    "node": ">=24"
+    "node": ">=18"
   },
   "scripts": {
     "dev": "next dev",

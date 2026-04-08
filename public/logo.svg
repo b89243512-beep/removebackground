@@ -1,7 +1,44 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" fill="none">
-  <rect width="512" height="512" rx="100" fill="#0ea5e9"/>
-  <path d="M150 256h212" stroke="white" stroke-width="56" stroke-linecap="round"/>
-  <path d="M256 150v212" stroke="white" stroke-width="56" stroke-linecap="round" opacity="0"/>
-  <rect x="140" y="180" width="100" height="152" rx="12" fill="white" opacity="0.9"/>
-  <rect x="272" y="180" width="100" height="152" rx="12" fill="white" opacity="0.35" stroke="white" stroke-width="4" stroke-dasharray="8 6"/>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 500" width="500" height="500" fill="none">
+  <!-- Gradient background (pink to orange) -->
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#f9a870"/>
+      <stop offset="50%" stop-color="#e8657a"/>
+      <stop offset="100%" stop-color="#f74c8e"/>
+    </linearGradient>
+    <clipPath id="rounded">
+      <rect width="500" height="500" rx="90"/>
+    </clipPath>
+    <!-- Checkerboard pattern -->
+    <pattern id="checker" x="0" y="0" width="50" height="50" patternUnits="userSpaceOnUse">
+      <rect width="25" height="25" fill="#e2e2e2"/>
+      <rect x="25" y="0" width="25" height="25" fill="#ffffff"/>
+      <rect x="0" y="25" width="25" height="25" fill="#ffffff"/>
+      <rect x="25" y="25" width="25" height="25" fill="#e2e2e2"/>
+    </pattern>
+  </defs>
+
+  <g clip-path="url(#rounded)">
+    <!-- Checkerboard (transparent area revealed) -->
+    <rect width="500" height="500" fill="url(#checker)"/>
+
+    <!-- Gradient layer with diagonal cut -->
+    <polygon points="0,0 500,0 0,500" fill="url(#bg)"/>
+    <polygon points="500,500 500,160 160,500" fill="url(#bg)"/>
+
+    <!-- Eraser shape -->
+    <g transform="translate(250,270) rotate(-45)">
+      <!-- Eraser body (blue) -->
+      <rect x="-40" y="-90" width="80" height="110" rx="6" fill="#2c5282"/>
+      <!-- Eraser tip (light gray) -->
+      <rect x="-40" y="20" width="80" height="60" rx="20" fill="#d4d4d4"/>
+      <!-- Eraser band line -->
+      <rect x="-40" y="14" width="80" height="12" fill="#a0aec0" rx="2"/>
+    </g>
+
+    <!-- Sparkle -->
+    <g transform="translate(440, 440)" fill="white" opacity="0.9">
+      <path d="M0,-8 L2,-2 L8,0 L2,2 L0,8 L-2,2 L-8,0 L-2,-2 Z"/>
+    </g>
+  </g>
 </svg>
