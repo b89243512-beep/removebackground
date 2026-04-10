@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef, useCallback } from "react";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
 import {
@@ -26,6 +26,10 @@ import {
   Layers,
   Download,
   Wand2,
+  Loader2,
+  X,
+  RotateCcw,
+  ArrowRight,
 } from "lucide-react";
 
 const features = [
@@ -168,13 +172,108 @@ function FAQItem({ question, answer }: { question: string; answer: string }) {
 }
 
 export default function Home() {
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const [originalImage, setOriginalImage] = useState<string | null>(null);
+  const [resultImage, setResultImage] = useState<string | null>(null);
+  const [processing, setProcessing] = useState(false);
+  const [progress, setProgress] = useState(0);
+  const [dragOver, setDragOver] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  const processImage = useCallback(async (file: File) => {
+    const allowed = ["image/jpeg", "image/jpg", "image/png", "image/webp"];
+    if (!allowed.includes(file.type)) {
+      setError("Please upload a JPG, PNG, or WebP image.");
+      return;
+    }
+    if (file.size > 10 * 1024 * 1024) {
+      setError("File too large. Maximum size is 10MB.");
+      return;
+    }
+
+    setError(null);
+    setProcessing(true);
+    setProgress(0);
+    setResultImage(null);
+
+    // Show original
+    const reader = new FileReader();
+    reader.onload = (e) => setOriginalImage(e.target?.result as string);
+    reader.readAsDataURL(file);
+
+    // Simulate initial progress while model loads
+    const progressInterval = setInterval(() => {
+      setProgress((prev) => {
+        if (prev >= 85) { clearInterval(progressInterval); return 85; }
+        return prev + Math.random() * 8;
+      });
+    }, 500);
+
+    try {
+      const { removeBackground } = await import("@imgly/background-removal");
+      const blob = await removeBackground(file, {
+        progress: (key: string, current: number, total: number) => {
+          if (total > 0) {
+            setProgress(Math.min(90 + (current / total) * 10, 99));
+          }
+        },
+      });
+      clearInterval(progressInterval);
+      setProgress(100);
+
+      const url = URL.createObjectURL(blob);
+      setResultImage(url);
+    } catch (err) {
+      clearInterval(progressInterval);
+      console.error("Processing error:", err);
+      setError("Failed to process image. Please try again with a different image.");
+    } finally {
+      setProcessing(false);
+    }
+  }, []);
+
+  const handleDrop = useCallback((e: React.DragEvent) => {
+    e.preventDefault();
+    setDragOver(false);
+    const file = e.dataTransfer.files[0];
+    if (file) processImage(file);
+  }, [processImage]);
+
+  const handlePaste = useCallback((e: React.ClipboardEvent) => {
+    const items = e.clipboardData.items;
+    for (let i = 0; i < items.length; i++) {
+      if (items[i].type.startsWith("image/")) {
+        const file = items[i].getAsFile();
+        if (file) processImage(file);
+        break;
+      }
+    }
+  }, [processImage]);
+
+  const handleDownload = useCallback(() => {
+    if (!resultImage) return;
+    const a = document.createElement("a");
+    a.href = resultImage;
+    a.download = "removed-background.png";
+    a.click();
+  }, [resultImage]);
+
+  const handleReset = useCallback(() => {
+    if (resultImage) URL.revokeObjectURL(resultImage);
+    setOriginalImage(null);
+    setResultImage(null);
+    setProcessing(false);
+    setProgress(0);
+    setError(null);
+  }, [resultImage]);
+
   return (
     <>
       <Navbar />
 
       <main>
         {/* Hero Section */}
-        <section className="gradient-hero-subtle py-8 md:py-10" id="remover">
+        <section className="gradient-hero-subtle py-8 md:py-10" id="remover" onPaste={handlePaste}>
           <div className="max-w-4xl mx-auto px-4 text-center">
             <h1 className="text-4xl md:text-5xl font-extrabold text-foreground leading-tight">
               Free Remove Background{" "}
@@ -184,58 +283,132 @@ export default function Home() {
               Upload any image and remove its background in seconds with AI. Perfect for e-commerce, headshots, design projects, and more — completely free.
             </p>
 
-            {/* Upload Area */}
-            <div className="mt-4 max-w-2xl mx-auto space-y-3">
-              {/* Search-style Input Bar */}
-              <div className="bg-white/70 backdrop-blur-sm rounded-full border border-border/80 shadow-lg px-5 py-2.5 flex items-center gap-3">
-                <input
-                  type="text"
-                  placeholder="Paste an image URL here"
-                  className="flex-1 bg-transparent text-base text-foreground placeholder:text-muted/50 focus:outline-none"
-                />
-                <div className="flex items-center gap-1">
-                  <button
-                    className="w-10 h-10 rounded-full flex items-center justify-center text-muted/60 hover:text-primary hover:bg-primary/5 transition-colors"
-                    aria-label="Upload from URL"
-                    title="Upload from URL"
-                  >
-                    <Globe className="w-5 h-5" />
-                  </button>
-                  <div className="w-px h-6 bg-border/60" />
-                  <button
-                    className="w-10 h-10 rounded-full bg-foreground flex items-center justify-center text-white hover:bg-foreground/80 transition-colors"
-                    aria-label="Submit"
-                  >
-                    <SendHorizonal className="w-5 h-5" />
-                  </button>
-                </div>
-              </div>
+            {/* Hidden file input */}
+            <input
+              ref={fileInputRef}
+              type="file"
+              accept="image/jpeg,image/png,image/webp"
+              className="hidden"
+              onChange={(e) => {
+                const file = e.target.files?.[0];
+                if (file) processImage(file);
+                e.target.value = "";
+              }}
+            />
 
-              {/* Drop Zone */}
-              <div className="upload-area rounded-2xl py-6">
-                <div className="flex flex-col items-center gap-2">
-                  <div className="w-10 h-10 rounded-lg bg-primary/5 flex items-center justify-center">
-                    <Image className="w-5 h-5 text-muted/40" />
+            {/* Error message */}
+            {error && (
+              <div className="mt-4 max-w-2xl mx-auto bg-red-50 border border-red-200 text-red-600 text-sm rounded-xl px-4 py-3 flex items-center justify-between">
+                <span>{error}</span>
+                <button onClick={() => setError(null)}><X className="w-4 h-4" /></button>
+              </div>
+            )}
+
+            {/* Result View */}
+            {(originalImage && (processing || resultImage)) ? (
+              <div className="mt-4 max-w-3xl mx-auto">
+                {/* Processing State */}
+                {processing && !resultImage && (
+                  <div className="bg-white rounded-2xl border border-border shadow-lg p-8">
+                    <div className="flex flex-col items-center gap-4">
+                      <div className="relative">
+                        <img src={originalImage} alt="Processing" className="max-h-48 rounded-xl opacity-50" />
+                        <div className="absolute inset-0 flex items-center justify-center">
+                          <Loader2 className="w-10 h-10 text-primary animate-spin" />
+                        </div>
+                      </div>
+                      <div className="w-full max-w-xs">
+                        <p className="text-sm font-semibold text-foreground mb-2">Removing background...</p>
+                        <div className="w-full bg-gray-100 rounded-full h-2">
+                          <div
+                            className="bg-gradient-to-r from-primary to-secondary h-2 rounded-full transition-all duration-300"
+                            style={{ width: `${Math.min(progress, 100)}%` }}
+                          />
+                        </div>
+                        <p className="text-xs text-muted mt-1 text-right">{Math.round(Math.min(progress, 100))}%</p>
+                      </div>
+                      <p className="text-xs text-muted">First time may take longer while the AI model loads</p>
+                    </div>
                   </div>
-                  <p className="text-muted text-sm">
-                    Drag Image or{" "}
-                    <span className="font-semibold text-foreground cursor-pointer hover:text-primary transition-colors">
-                      Click Here
-                    </span>{" "}
-                    to upload
-                  </p>
-                  <p className="text-muted/50 text-xs flex items-center gap-1.5">
-                    Command{" "}
-                    <kbd className="px-1.5 py-0.5 rounded bg-surface border border-border text-[10px] font-mono">&#8984;</kbd>
-                    {" "}+{" "}
-                    <kbd className="px-1.5 py-0.5 rounded bg-surface border border-border text-[10px] font-mono">V</kbd>
-                    {" "}to paste
-                  </p>
+                )}
+
+                {/* Result State */}
+                {resultImage && (
+                  <div className="bg-white rounded-2xl border border-border shadow-lg overflow-hidden">
+                    {/* Before / After */}
+                    <div className="grid grid-cols-1 md:grid-cols-2">
+                      {/* Original */}
+                      <div className="p-4 border-b md:border-b-0 md:border-r border-border">
+                        <p className="text-xs font-semibold text-muted uppercase tracking-wider mb-3">Original</p>
+                        <div className="bg-gray-50 rounded-xl p-2 flex items-center justify-center min-h-[200px]">
+                          <img src={originalImage} alt="Original" className="max-h-64 rounded-lg" />
+                        </div>
+                      </div>
+                      {/* Result */}
+                      <div className="p-4">
+                        <p className="text-xs font-semibold text-primary uppercase tracking-wider mb-3">Background Removed</p>
+                        <div className="checkerboard rounded-xl p-2 flex items-center justify-center min-h-[200px]">
+                          <img src={resultImage} alt="Result" className="max-h-64 rounded-lg" />
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Actions */}
+                    <div className="flex items-center justify-center gap-3 p-4 border-t border-border bg-gray-50/50">
+                      <button
+                        onClick={handleDownload}
+                        className="btn-primary text-sm px-6 py-2.5 gap-2"
+                      >
+                        <Download className="w-4 h-4" />
+                        Download PNG
+                      </button>
+                      <button
+                        onClick={handleReset}
+                        className="btn-secondary text-sm px-6 py-2.5 gap-2"
+                      >
+                        <RotateCcw className="w-4 h-4" />
+                        New Image
+                      </button>
+                    </div>
+                  </div>
+                )}
+              </div>
+            ) : (
+              /* Upload Area */
+              <div className="mt-4 max-w-2xl mx-auto space-y-3">
+                {/* Drop Zone */}
+                <div
+                  onClick={() => fileInputRef.current?.click()}
+                  onDrop={handleDrop}
+                  onDragOver={(e) => { e.preventDefault(); setDragOver(true); }}
+                  onDragLeave={() => setDragOver(false)}
+                  className={`upload-area rounded-2xl py-10 cursor-pointer ${dragOver ? "border-primary/60 bg-primary/5" : ""}`}
+                >
+                  <div className="flex flex-col items-center gap-3">
+                    <div className="w-14 h-14 rounded-2xl bg-primary/10 flex items-center justify-center">
+                      <Upload className="w-7 h-7 text-primary" />
+                    </div>
+                    <div>
+                      <p className="text-foreground font-semibold">
+                        Drag & drop an image or{" "}
+                        <span className="text-primary">click to browse</span>
+                      </p>
+                      <p className="text-muted text-sm mt-1">JPG, PNG, WebP — Max 10MB</p>
+                    </div>
+                    <p className="text-muted/50 text-xs flex items-center gap-1.5">
+                      Command{" "}
+                      <kbd className="px-1.5 py-0.5 rounded bg-surface border border-border text-[10px] font-mono">&#8984;</kbd>
+                      {" "}+{" "}
+                      <kbd className="px-1.5 py-0.5 rounded bg-surface border border-border text-[10px] font-mono">V</kbd>
+                      {" "}to paste an image
+                    </p>
+                  </div>
                 </div>
               </div>
-            </div>
+            )}
 
             {/* Stats */}
+            {!originalImage && (
             <div className="mt-5 grid grid-cols-4 gap-3 max-w-2xl mx-auto">
               {stats.map((stat) => (
                 <div key={stat.label} className="text-center py-3">
@@ -249,6 +422,7 @@ export default function Home() {
                 </div>
               ))}
             </div>
+            )}
           </div>
         </section>
 
