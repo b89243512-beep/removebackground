@@ -9,6 +9,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { url: `${baseUrl}/jpg-to-png` },
     { url: `${baseUrl}/png-to-jpg` },
     { url: `${baseUrl}/resize` },
+    { url: `${baseUrl}/image-to-base64` },
     { url: `${baseUrl}/privacy` },
     { url: `${baseUrl}/terms` },
   ];

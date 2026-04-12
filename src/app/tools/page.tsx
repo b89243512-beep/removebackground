@@ -1,7 +1,7 @@
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
 import Link from "next/link";
-import { Scissors, Minimize2, ArrowRightLeft, Maximize2 } from "lucide-react";
+import { Scissors, Minimize2, ArrowRightLeft, Maximize2, Hash } from "lucide-react";
 
 const tools = [
   {
@@ -53,6 +53,16 @@ const tools = [
     color: "text-rose-500",
     bg: "bg-rose-50",
     border: "border-rose-100",
+  },
+  {
+    href: "/image-to-base64",
+    icon: Hash,
+    title: "Free Image to Base64 Converter",
+    tagline: "Encode images to Data URI, CSS, HTML, JSON",
+    description: "Convert any image file to a Base64 encoded string or Data URI for embedding directly in HTML, CSS, JSON, and API payloads. Supports JPG, PNG, WebP, GIF, SVG, BMP, and ICO formats with five ready-to-use output formats. Ideal for developers who need inline images, offline-first applications, email templates, and single-file distribution.",
+    color: "text-indigo-500",
+    bg: "bg-indigo-50",
+    border: "border-indigo-100",
   },
 ];
 

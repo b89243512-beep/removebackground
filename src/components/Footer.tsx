@@ -7,6 +7,7 @@ const toolLinks = [
   { label: "JPG to PNG Converter", href: "/jpg-to-png" },
   { label: "PNG to JPG Converter", href: "/png-to-jpg" },
   { label: "Image Resizer", href: "/resize" },
+  { label: "Image to Base64", href: "/image-to-base64" },
   { label: "All Tools", href: "/tools" },
 ];
 
